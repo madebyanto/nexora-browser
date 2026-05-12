@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"/>
+<title>Impostazioni</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/styles/tokens.css"/>
+<link rel="stylesheet" href="/styles/panels.css"/>
+<script src="/components/settings.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', async () => {
+    const initialSettings = await window.nexora.getSettings();
+    initSettings(initialSettings.settings); // Assumendo che initSettings sia globale o importato
+
+    // Event listener per il salvataggio delle impostazioni
+    document.getElementById('btn-save-settings').addEventListener('click', () => {
+      const homepage = document.getElementById('cfg-homepage').value;
+      const searchEngineSelect = document.getElementById('cfg-engine');
+      let searchEngine = searchEngineSelect.value;
+      if (searchEngine === 'custom') {
+        searchEngine = document.getElementById('cfg-custom-engine').value;
+      }
+      const theme = document.getElementById('cfg-theme').value;
+      const accentColor = document.getElementById('cfg-accent').value;
+      const askDownloadPath = document.getElementById('cfg-ask-dl').checked;
+
+      const newSettings = {
+        homepage,
+        searchEngine,
+        theme,
+        accentColor,
+        askDownloadPath,
+        // downloadPath verrà gestito dal main process
+      };
+      window.nexora.saveSettings(newSettings);
+      const msgEl = document.getElementById('settings-saved-msg');
+      msgEl.style.display = 'inline';
+      setTimeout(() => msgEl.style.display = 'none', 2000);
+    });
+
+    // Event listener per la selezione della cartella di download
+    document.getElementById('btn-pick-dl').addEventListener('click', async () => {
+      const dir = await window.nexora.pickDownloadDir();
+      if (dir) {
+        document.getElementById('lbl-dl-path').textContent = dir;
+        // Aggiorna l'impostazione nel main process
+        const currentSettings = await window.nexora.getSettings();
+        window.nexora.saveSettings({ ...currentSettings.settings, downloadPath: dir });
+      }
+    });
+
+    // Gestione del motore di ricerca personalizzato
+    const cfgEngine = document.getElementById('cfg-engine');
+    const rowCustomEngine = document.getElementById('row-custom-engine');
+    cfgEngine.addEventListener('change', () => {
+      rowCustomEngine.style.display = cfgEngine.value === 'custom' ? 'flex' : 'none';
+    });
+    // Inizializza la visibilità al caricamento
+    rowCustomEngine.style.display = cfgEngine.value === 'custom' ? 'flex' : 'none';
+
+    // Aggiorna i segnalibri
+    window.nexora.on('bookmarks-updated', (bookmarks) => {
+      renderSettingsBookmarks(bookmarks);
+    });
+  });
+</script>
+</head>
+<body>
+  <div class="ipage" id="page-settings">
+    <div class="ipage-header">
+      <div class="ipage-icon">⚙️</div>
+      <div>
+        <h2>Impostazioni</h2>
+        <p>Personalizza Nexora Browser</p>
+      </div>
+    </div>
+    <div class="settings-body" id="settings-body">
+      <section class="settings-section">
+        <h3>Generale</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Homepage</span>
+            <span class="setting-desc">URL aperto aprendo una nuova tab</span>
+          </div>
+          <input id="cfg-homepage" type="text" class="setting-input" placeholder="nexora://newtab"/>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Motore di ricerca</span>
+            <span class="setting-desc">URL di ricerca (usa %s o ?q= per la query)</span>
+          </div>
+          <select id="cfg-engine" class="setting-select">
+            <option value="https://duckduckgo.com/?q=">DuckDuckGo</option>
+            <option value="https://www.google.com/search?q=">Google</option>
+            <option value="https://www.bing.com/search?q=">Bing</option>
+            <option value="https://search.brave.com/search?q=">Brave Search</option>
+            <option value="custom">Personalizzato…</option>
+          </select>
+        </div>
+        <div class="setting-row" id="row-custom-engine" style="display:none">
+          <div class="setting-info">
+            <span class="setting-label">URL motore personalizzato</span>
+          </div>
+          <input id="cfg-custom-engine" type="text" class="setting-input" placeholder="https://example.com/search?q="/>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Aspetto</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Tema</span>
+            <span class="setting-desc">Chiaro o scuro</span>
+          </div>
+          <select id="cfg-theme" class="setting-select">
+            <option value="dark">Scuro</option>
+            <option value="light">Chiaro</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Colore accento</span>
+            <span class="setting-desc">Colore principale dell'interfaccia</span>
+          </div>
+          <div class="color-picker-row">
+            <input id="cfg-accent" type="color" class="setting-color"/>
+            <div class="color-presets" id="color-presets"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Download</h3>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Cartella download</span>
+            <span class="setting-desc" id="lbl-dl-path">—</span>
+          </div>
+          <button class="setting-btn" id="btn-pick-dl">Cambia...</button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Chiedi dove salvare</span>
+            <span class="setting-desc">Mostra la finestra di selezione ad ogni download</span>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="cfg-ask-dl"/>
+            <span class="toggle-track"><span class="toggle-thumb"></span></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <h3>Segnalibri</h3>
+        <div id="settings-bookmarks-list" class="bookmarks-list"></div>
+      </section>
+
+      <div class="settings-actions">
+        <button class="btn-primary" id="btn-save-settings">Salva impostazioni</button>
+        <span id="settings-saved-msg" class="saved-msg" style="display:none">✓ Salvato!</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

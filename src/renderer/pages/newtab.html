@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"/>
+<title>Nuova Tab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/styles/tokens.css"/>
+<link rel="stylesheet" href="/styles/panels.css"/>
+<script>
+  // Questo script verrà eseguito nel contesto della pagina interna
+  // e avrà accesso alle API esposte tramite contextBridge nel preload/page-preload.js
+  document.addEventListener('DOMContentLoaded', () => {
+    const ntSearch = document.getElementById('nt-search');
+    if (ntSearch) {
+      ntSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const v = ntSearch.value.trim();
+          if (v) { window.nexora.navigate(v); ntSearch.value=''; }
+        }
+      });
+    }
+    // Qui andrebbe la logica per renderizzare i segnalibri se necessario
+    // window.nexora.getSettings().then(settings => { /* render bookmarks */ });
+  });
+</script>
+</head>
+<body>
+  <div class="ipage" id="page-newtab">
+    <div class="nt-bg"></div>
+    <div class="nt-body">
+      <div class="nt-logo">
+        <svg viewBox="0 0 72 72" fill="none"><circle cx="36" cy="36" r="34" stroke="url(#ga)" stroke-width="3"/><path d="M18 24L36 14L54 24V48L36 58L18 48Z" stroke="url(#gb)" stroke-width="2.5" fill="none"/><circle cx="36" cy="36" r="10" fill="url(#gc)"/><defs><linearGradient id="ga" x1="0" y1="0" x2="72" y2="72"><stop stop-color="#7C4DFF"/><stop offset="1" stop-color="#651FFF"/></linearGradient><linearGradient id="gb" x1="0" y1="0" x2="72" y2="72"><stop stop-color="#9C72FF"/><stop offset="1" stop-color="#AA80FF"/></linearGradient><radialGradient id="gc" cx="50%" cy="50%" r="50%"><stop stop-color="#7C4DFF"/><stop offset="1" stop-color="#4527A0"/></radialGradient></defs></svg>
+      </div>
+      <h1 class="nt-title">Nexora</h1>
+      <p class="nt-sub">Il tuo browser. Il tuo spazio.</p>
+      <div class="nt-search-box">
+        <svg viewBox="0 0 20 20" class="nt-search-icon"><circle cx="9" cy="9" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M13 13l3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input id="nt-search" type="text" placeholder="Cerca sul web o inserisci un URL..."/>
+      </div>
+      <div class="nt-bookmarks" id="nt-bookmarks"></div>
+    </div>
+  </div>
+</body>
+</html>

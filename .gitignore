@@ -1,0 +1,15 @@
+node_modules/
+dist/
+out/
+build/
+release/
+
+.cache/
+*.log
+
+.env
+.env.*
+
+.DS_Store
+Thumbs.db
+desktop.ini

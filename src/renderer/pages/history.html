@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"/>
+<title>Cronologia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/styles/tokens.css"/>
+<link rel="stylesheet" href="/styles/panels.css"/>
+<script src="../components/history.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.renderHistory(); // Chiamata per renderizzare la cronologia
+    document.getElementById('btn-clear-history').addEventListener('click', () => {
+      if (confirm('Cancellare tutta la cronologia?')) {
+        window.nexora.clearHistory();
+        window.renderHistory(); // Rerender dopo la cancellazione
+      }
+    });
+    window.nexora.on('history-updated', () => window.renderHistory());
+  });
+</script>
+</head>
+<body>
+  <div class="ipage" id="page-history">
+    <div class="ipage-header">
+      <div class="ipage-icon">🕐</div>
+      <div><h2>Cronologia</h2><p>Siti visitati di recente</p></div>
+      <button class="btn-danger ml-auto" id="btn-clear-history">Cancella tutto</button>
+    </div>
+    <div class="history-list" id="history-list"></div>
+  </div>
+</body>
+</html>

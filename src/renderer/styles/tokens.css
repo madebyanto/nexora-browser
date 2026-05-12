@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════════════════════════
+   Nexora Browser v2 — Design Tokens (Material You)
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Accent (overridden dynamically via JS) */
+  --accent:        #7C4DFF;
+  --accent-dim:    #651FFF;
+  --accent-soft:   rgba(124, 77, 255, 0.15);
+  --accent-glow:   rgba(124, 77, 255, 0.30);
+
+  /* Surfaces - dark */
+  --s0:  #0E0E16;
+  --s1:  #13131E;
+  --s2:  #191926;
+  --s3:  #1E1E30;
+  --s4:  #25253A;
+  --s5:  #2D2D44;
+
+  /* On-surface */
+  --on-s:        rgba(232,230,255,0.95);
+  --on-s2:       rgba(232,230,255,0.65);
+  --on-s3:       rgba(232,230,255,0.38);
+  --on-s4:       rgba(232,230,255,0.18);
+
+  /* State layers */
+  --hover:  rgba(232,230,255,0.06);
+  --press:  rgba(232,230,255,0.10);
+  --focus:  rgba(124,77,255,0.20);
+
+  /* Chrome sizes */
+  --tab-h:     36px;
+  --nav-h:     50px;
+  --chrome-h:  86px;  /* tab-h + nav-h */
+
+  /* Radii */
+  --r-xs: 4px;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 24px;
+  --r-full: 9999px;
+
+  /* Elevation */
+  --e1: 0 1px 2px rgba(0,0,0,.4);
+  --e2: 0 2px 8px rgba(0,0,0,.45);
+  --e3: 0 4px 20px rgba(0,0,0,.5);
+
+  /* Motion */
+  --dur-fast:   100ms;
+  --dur-std:    200ms;
+  --dur-slow:   350ms;
+  --ease-std:   cubic-bezier(.2,0,0,1);
+  --ease-decel: cubic-bezier(0,.0,.2,1);
+  --ease-spring:cubic-bezier(.34,1.56,.64,1);
+
+  /* Font */
+  --font-ui:   'Google Sans', 'Segoe UI Variable', system-ui, sans-serif;
+  --font-mono: 'Google Sans Mono', 'Cascadia Code', monospace;
+}
+
+/* Light theme overrides */
+[data-theme="light"] {
+  --s0:  #F3F0FF;
+  --s1:  #EDE9FF;
+  --s2:  #E6E1FF;
+  --s3:  #DDD8F5;
+  --s4:  #D0CBEA;
+  --s5:  #C4BFDE;
+  --on-s:  rgba(20,10,50,.90);
+  --on-s2: rgba(20,10,50,.60);
+  --on-s3: rgba(20,10,50,.38);
+  --on-s4: rgba(20,10,50,.14);
+  --hover: rgba(20,10,50,.05);
+  --press: rgba(20,10,50,.08);
+}
+
+/* ── Reset ── */
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+
+html, body {
+  width:100%; height:100%;
+  overflow:hidden;
+  background:var(--s0);
+  color:var(--on-s);
+  font-family:var(--font-ui);
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--on-s4); border-radius:3px; }
+::-webkit-scrollbar-thumb:hover { background:var(--on-s3); }
+
+/* Focus */
+:focus-visible { outline:2px solid var(--accent); outline-offset:2px; }
+
+input, select, textarea { font-family:var(--font-ui); }

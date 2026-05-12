@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"/>
+<title>Nexora Browser</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles/tokens.css"/>
+<link rel="stylesheet" href="styles/chrome.css"/>
+<link rel="stylesheet" href="styles/panels.css"/>
+</head>
+<body>
+
+<!-- ══════════════════════════════ CHROME TOP ═══════════════════════════════ -->
+<div id="chrome" class="chrome">
+
+  <!-- drag area -->
+  <div class="drag-handle" id="drag-handle"></div>
+
+  <!-- ── Tab strip ── -->
+  <div class="tab-strip" id="tab-strip">
+    <div class="tabs-scroll" id="tabs-scroll">
+      <div class="tabs-list" id="tabs-list"><!-- tabs --></div>
+    </div>
+    <button class="icon-btn tab-new-btn" id="btn-new-tab" title="Nuova tab (Ctrl+T)">
+      <svg viewBox="0 0 20 20"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <div class="win-controls">
+      <button class="wc-btn min-btn" id="btn-min" title="Minimizza">
+        <svg viewBox="0 0 12 2"><path d="M0 1h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <button class="wc-btn max-btn" id="btn-max" title="Massimizza">
+        <svg viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4" fill="none"/></svg>
+      </button>
+      <button class="wc-btn cls-btn" id="btn-cls" title="Chiudi">
+        <svg viewBox="0 0 12 12"><path d="M1.5 1.5l9 9M10.5 1.5l-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── Nav bar ── -->
+  <div class="nav-bar" id="nav-bar">
+    <div class="nav-left">
+      <button class="icon-btn nav-btn" id="btn-back"    title="Indietro (Alt+←)" disabled>
+        <svg viewBox="0 0 20 20"><path d="M13 5L8 10l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-btn" id="btn-forward" title="Avanti (Alt+→)" disabled>
+        <svg viewBox="0 0 20 20"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-btn" id="btn-reload"  title="Aggiorna (F5)">
+        <svg class="ico-refresh" viewBox="0 0 20 20"><path d="M4.5 10a5.5 5.5 0 015.5-5.5A5.5 5.5 0 0115 8l1.5-1.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 4.5V8H13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="ico-stop" viewBox="0 0 20 20" style="display:none"><path d="M7 7l6 6M13 7l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-btn nav-btn" id="btn-home"    title="Homepage">
+        <svg viewBox="0 0 20 20"><path d="M3 9.5L10 3l7 6.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.5 8V16h3.5v-3a1 1 0 012 0v3H14.5V8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+
+    <!-- omnibox -->
+    <div class="omnibox-wrap" id="omnibox-wrap">
+      <div class="omnibox-lock" id="omnibox-lock">
+        <svg viewBox="0 0 14 14"><rect x="2.5" y="6.5" width="9" height="6" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 6.5V4.5a2.5 2.5 0 015 0v2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </div>
+      <div class="omnibox-progress" id="omnibox-progress"></div>
+      <input id="omnibox" class="omnibox" type="text" spellcheck="false" autocomplete="off" placeholder="Cerca o inserisci un URL..."/>
+    </div>
+
+    <div class="nav-right">
+      <button class="icon-btn nav-btn bookmark-star" id="btn-bookmark" title="Salva segnalibro">
+        <svg viewBox="0 0 20 20"><path d="M10 2l2.39 4.84 5.35.78-3.87 3.77.91 5.32L10 14.27l-4.78 2.51.91-5.32L2.26 7.62l5.35-.78z" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="icon-btn nav-btn" id="btn-menu" title="Menu Nexora">
+        <svg viewBox="0 0 20 20"><circle cx="10" cy="4.5" r="1.3" fill="currentColor"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/><circle cx="10" cy="15.5" r="1.3" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- download toast -->
+  <div class="dl-toast-area" id="dl-toast-area"></div>
+</div>
+
+<script src="components/tabs.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

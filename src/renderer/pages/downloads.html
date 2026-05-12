@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;"/>
+<title>Download</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Mono&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/styles/tokens.css"/>
+<link rel="stylesheet" href="/styles/panels.css"/>
+<script src="/components/downloads.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    window.nexora.getDownloads(); // Richiede la lista dei download al main process
+    window.renderDownloads(); // Renderizza la lista iniziale (potrebbe essere vuota)
+    document.getElementById('btn-clear-downloads').addEventListener('click', () => {
+      window.nexora.clearDownloads();
+      window.renderDownloads(); // Rerender dopo la cancellazione
+    });
+    window.nexora.on('downloads-list', () => window.renderDownloads());
+    window.nexora.on('download-updated', () => window.renderDownloads());
+    window.nexora.on('download-done', () => window.renderDownloads());
+  });
+</script>
+</head>
+<body>
+  <div class="ipage" id="page-downloads">
+    <div class="ipage-header">
+      <div class="ipage-icon">📥</div>
+      <div><h2>Download</h2><p>File scaricati</p></div>
+      <button class="btn-secondary ml-auto" id="btn-clear-downloads">Cancella lista</button>
+    </div>
+    <div class="downloads-list" id="downloads-list"></div>
+  </div>
+</body>
+</html>

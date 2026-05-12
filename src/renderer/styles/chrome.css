@@ -1,0 +1,321 @@
+/* ═══════════════════════════════════════════════════════════════
+   Nexora Browser v2 — Chrome (tab strip + nav bar)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Outer chrome container ── */
+.chrome {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 900;
+  height: var(--chrome-h);
+  background: var(--s1);
+  border-bottom: 1px solid var(--on-s4);
+  box-shadow: var(--e2);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Accent line top */
+.chrome::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 40%, var(--accent-dim) 60%, transparent 100%);
+  opacity: .7;
+}
+
+/* ── Drag handle ── */
+.drag-handle {
+  -webkit-app-region: drag;
+  position: absolute;
+  top: 0; left: 0; right: 150px;
+  height: var(--tab-h);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TAB STRIP
+   ══════════════════════════════════════════════════════════════ */
+
+.tab-strip {
+  display: flex;
+  align-items: center;
+  height: var(--tab-h);
+  padding: 0 4px 0 6px;
+  gap: 2px;
+  -webkit-app-region: no-drag;
+}
+
+.tabs-scroll {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.tabs-list {
+  display: flex;
+  align-items: flex-end;
+  height: var(--tab-h);
+  gap: 1px;
+}
+
+/* ── Single Tab ── */
+.tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 8px 0 9px;
+  min-width: 80px;
+  max-width: 200px;
+  flex: 1;
+  border-radius: var(--r-sm) var(--r-sm) 0 0;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  transition: background var(--dur-std) var(--ease-std);
+  animation: tab-in var(--dur-slow) var(--ease-spring) both;
+  -webkit-app-region: no-drag;
+}
+
+@keyframes tab-in {
+  from { opacity:0; transform:translateY(6px) scaleX(.88); flex:0; min-width:0; max-width:0; }
+  to   { opacity:1; transform:translateY(0)   scaleX(1); }
+}
+
+.tab:hover { background: var(--hover); }
+
+.tab.active {
+  background: var(--s2);
+}
+/* bottom line indicator for active */
+.tab.active::after {
+  content:'';
+  position:absolute;
+  bottom:0; left:8px; right:8px;
+  height:2px;
+  border-radius:2px;
+  background:var(--accent);
+}
+
+/* favicon / spinner */
+.tab-icon {
+  width:14px; height:14px;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.tab-favicon {
+  width:14px; height:14px;
+  border-radius:2px;
+  object-fit:contain;
+}
+.tab-spinner {
+  width:12px; height:12px;
+  border:1.5px solid var(--on-s4);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* title */
+.tab-title {
+  flex:1;
+  min-width:0;
+  font-size:12px;
+  font-weight:400;
+  color:var(--on-s2);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  transition:color var(--dur-fast);
+}
+.tab.active .tab-title { color:var(--on-s); font-weight:500; }
+
+/* close button */
+.tab-close {
+  flex-shrink:0;
+  width:16px; height:16px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%;
+  opacity:0;
+  transition:opacity var(--dur-fast), background var(--dur-fast), transform var(--dur-fast) var(--ease-spring);
+  color:var(--on-s3);
+}
+.tab:hover .tab-close,
+.tab.active .tab-close { opacity:1; }
+.tab-close:hover { background:var(--press); color:var(--on-s); transform:scale(1.1); }
+.tab-close:active { transform:scale(.88); }
+.tab-close svg { width:8px; height:8px; pointer-events:none; }
+
+/* ── New tab button ── */
+.tab-new-btn {
+  width:28px; height:28px;
+  flex-shrink:0;
+}
+.icon-btn {
+  display:flex; align-items:center; justify-content:center;
+  border:none; background:transparent;
+  color:var(--on-s2);
+  cursor:pointer;
+  border-radius:var(--r-sm);
+  transition:background var(--dur-fast), color var(--dur-fast), transform var(--dur-fast) var(--ease-spring);
+  -webkit-app-region:no-drag;
+}
+.icon-btn svg { width:18px; height:18px; pointer-events:none; }
+.icon-btn:hover  { background:var(--hover); color:var(--on-s); }
+.icon-btn:active { background:var(--press); transform:scale(.92); }
+
+/* ── Window controls ── */
+.win-controls {
+  display:flex; align-items:center; gap:1px;
+  -webkit-app-region:no-drag;
+  margin-left:4px;
+}
+.wc-btn {
+  width:30px; height:26px;
+  display:flex; align-items:center; justify-content:center;
+  border:none; background:transparent;
+  color:var(--on-s3);
+  cursor:pointer;
+  border-radius:var(--r-sm);
+  transition:background var(--dur-fast), color var(--dur-fast);
+}
+.wc-btn svg { width:11px; height:11px; pointer-events:none; }
+.min-btn:hover,
+.max-btn:hover { background:var(--hover); color:var(--on-s); }
+.cls-btn:hover { background:rgba(255,80,80,.18); color:#FF6060; }
+.cls-btn:active { background:rgba(255,80,80,.30); }
+
+/* ══════════════════════════════════════════════════════════════
+   NAV BAR
+   ══════════════════════════════════════════════════════════════ */
+
+.nav-bar {
+  display:flex;
+  align-items:center;
+  height:var(--nav-h);
+  padding:0 8px;
+  gap:4px;
+  border-top:1px solid var(--on-s4);
+}
+
+.nav-left,
+.nav-right {
+  display:flex; align-items:center; gap:2px; flex-shrink:0;
+}
+
+.nav-btn {
+  width:34px; height:34px;
+}
+.nav-btn:disabled { opacity:.28; pointer-events:none; }
+
+/* reload spin when loading */
+.nav-btn.loading .ico-refresh { animation:spin .8s linear infinite; }
+
+/* bookmark filled */
+.bookmark-star.bookmarked svg path { fill:var(--accent); stroke:var(--accent); }
+
+/* ── Omnibox ── */
+.omnibox-wrap {
+  flex:1;
+  position:relative;
+  display:flex; align-items:center;
+  height:36px;
+  background:var(--s3);
+  border:1.5px solid var(--on-s4);
+  border-radius:var(--r-full);
+  overflow:hidden;
+  transition:background var(--dur-std), border-color var(--dur-std), box-shadow var(--dur-std);
+}
+.omnibox-wrap:hover { background:var(--s4); border-color:var(--on-s3); }
+.omnibox-wrap:focus-within {
+  background:var(--s3);
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
+
+.omnibox-lock {
+  position:absolute; left:12px;
+  color:var(--on-s3);
+  display:flex; align-items:center;
+  pointer-events:none;
+  transition:color var(--dur-fast);
+}
+.omnibox-lock svg { width:13px; height:13px; }
+.omnibox-wrap:focus-within .omnibox-lock { color:var(--accent); }
+
+/* loading progress bar */
+.omnibox-progress {
+  position:absolute;
+  bottom:0; left:0;
+  height:2px;
+  width:0%;
+  background:linear-gradient(90deg, var(--accent), var(--accent-dim));
+  border-radius:1px;
+  box-shadow:0 0 6px var(--accent-glow);
+  transition:width .25s ease;
+  opacity:0;
+}
+.omnibox-wrap.loading .omnibox-progress {
+  opacity:1;
+  animation:progress-pulse 1.5s ease-in-out infinite;
+}
+@keyframes progress-pulse {
+  0%   { width:0%;  opacity:1; }
+  60%  { width:75%; opacity:1; }
+  100% { width:95%; opacity:.6; }
+}
+
+.omnibox {
+  flex:1;
+  height:100%;
+  padding:0 14px 0 32px;
+  background:transparent;
+  border:none; outline:none;
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  color:var(--on-s);
+  caret-color:var(--accent);
+}
+.omnibox::placeholder { font-family:var(--font-ui); color:var(--on-s3); }
+
+/* ══════════════════════════════════════════════════════════════
+   DOWNLOAD TOAST AREA
+   ══════════════════════════════════════════════════════════════ */
+
+.dl-toast-area {
+  position:absolute;
+  bottom:-8px; right:16px;
+  display:flex; flex-direction:column-reverse; gap:6px;
+  z-index:9999;
+  pointer-events:none;
+}
+
+.dl-toast {
+  pointer-events:all;
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px;
+  background:var(--s4);
+  border:1px solid var(--on-s4);
+  border-radius:var(--r-md);
+  box-shadow:var(--e3);
+  font-size:12.5px;
+  max-width:320px;
+  animation:toast-in var(--dur-slow) var(--ease-spring) both;
+  color:var(--on-s);
+  transform:translateY(100%);
+}
+@keyframes toast-in {
+  from { opacity:0; transform:translateY(120%); }
+  to   { opacity:1; transform:translateY(0); }
+}
+.dl-toast-name { flex:1; min-width:0; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.dl-toast-prog { font-size:11px; color:var(--on-s2); white-space:nowrap; }
+.dl-toast-bar { width:100%; height:3px; background:var(--on-s4); border-radius:2px; margin-top:4px; }
+.dl-toast-bar-fill { height:100%; background:var(--accent); border-radius:2px; transition:width .2s; }
